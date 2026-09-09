@@ -1,0 +1,931 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Akki ❤️</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  min-height:100vh;
+  font-family:Georgia,serif;
+  background:
+    radial-gradient(circle at top,#351b38 0%,#160d1d 45%,#08070d 100%);
+  color:white;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,.5) 1px,transparent 1px);
+  background-size:55px 55px;
+  opacity:.12;
+}
+
+.container{
+  width:min(92%,650px);
+  margin:auto;
+  padding:35px 0 70px;
+}
+
+.screen{
+  display:none;
+  animation:fade .7s ease;
+}
+
+.screen.active{
+  display:block;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.center{
+  min-height:90vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+
+.small{
+  color:#d9a9c9;
+  letter-spacing:3px;
+  font-size:12px;
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+
+h1{
+  font-size:clamp(38px,10vw,70px);
+  margin-bottom:15px;
+}
+
+h2{
+  font-size:30px;
+  margin-bottom:18px;
+}
+
+p{
+  line-height:1.8;
+  color:#eadde8;
+}
+
+.heart{
+  font-size:65px;
+  animation:beat 1.4s infinite;
+  margin-bottom:20px;
+}
+
+@keyframes beat{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.15)}
+}
+
+button{
+  border:0;
+  padding:14px 25px;
+  margin:8px 4px;
+  border-radius:30px;
+  background:linear-gradient(135deg,#f28bbd,#a85bd1);
+  color:white;
+  font-size:15px;
+  cursor:pointer;
+  box-shadow:0 8px 25px rgba(200,80,180,.25);
+  transition:.25s;
+}
+
+button:hover{
+  transform:translateY(-3px) scale(1.02);
+}
+
+.card{
+  background:rgba(255,255,255,.075);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:25px;
+  padding:28px;
+  margin:18px 0;
+  backdrop-filter:blur(12px);
+  box-shadow:0 15px 40px rgba(0,0,0,.25);
+}
+
+.message{
+  font-size:19px;
+  line-height:1.9;
+  color:#fff0fa;
+}
+
+.highlight{
+  color:#ffacd7;
+  font-weight:bold;
+}
+
+.option{
+  display:block;
+  width:100%;
+  margin:12px 0;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  text-align:left;
+}
+
+.option.correct{
+  background:rgba(88,190,130,.25);
+  border-color:#75e2a7;
+}
+
+.option.wrong{
+  background:rgba(240,80,100,.2);
+  border-color:#ff8190;
+}
+
+.feedback{
+  min-height:30px;
+  margin-top:15px;
+  color:#ffc1df;
+}
+
+.progress{
+  position:fixed;
+  top:15px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(80%,400px);
+  height:5px;
+  background:rgba(255,255,255,.12);
+  border-radius:10px;
+  z-index:10;
+}
+
+.progressBar{
+  width:0%;
+  height:100%;
+  border-radius:10px;
+  background:linear-gradient(90deg,#ff8ecb,#b76cff);
+  transition:.5s;
+}
+
+/* Memory cards */
+.memory-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+  margin-top:20px;
+}
+
+.memory-card{
+  height:130px;
+  perspective:1000px;
+  cursor:pointer;
+}
+
+.memory-inner{
+  position:relative;
+  width:100%;
+  height:100%;
+  transition:.6s;
+  transform-style:preserve-3d;
+}
+
+.memory-card.flipped .memory-inner{
+  transform:rotateY(180deg);
+}
+
+.memory-front,
+.memory-back{
+  position:absolute;
+  inset:0;
+  backface-visibility:hidden;
+  border-radius:20px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:15px;
+  border:1px solid rgba(255,255,255,.13);
+}
+
+.memory-front{
+  background:linear-gradient(135deg,#4a254b,#24162d);
+  font-size:35px;
+}
+
+.memory-back{
+  background:linear-gradient(135deg,#742d5c,#382047);
+  transform:rotateY(180deg);
+  font-size:14px;
+}
+
+/* photo */
+.photo{
+  width:100%;
+  max-height:450px;
+  object-fit:cover;
+  border-radius:25px;
+  margin-top:15px;
+  border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 15px 40px rgba(0,0,0,.35);
+}
+
+.photoNote{
+  color:#cfaec6;
+  font-size:12px;
+  margin-top:8px;
+}
+
+/* Secret box */
+.secret{
+  display:none;
+  animation:fade .7s ease;
+}
+
+.secret.show{
+  display:block;
+}
+
+.bigQuote{
+  font-size:27px;
+  line-height:1.6;
+  text-align:center;
+  color:#ffe1f2;
+}
+
+footer{
+  text-align:center;
+  margin-top:50px;
+  color:#9d8398;
+  font-size:12px;
+}
+
+@media(max-width:500px){
+  .card{padding:22px}
+  .message{font-size:17px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="progress">
+  <div class="progressBar" id="progressBar"></div>
+</div>
+
+<div class="container">
+
+<!-- INTRO -->
+<section class="screen active" id="screen0">
+  <div class="center">
+    <div class="heart">❤️</div>
+    <div class="small">A little journey for you</div>
+
+    <h1>Hey Akki...</h1>
+
+    <p style="max-width:500px">
+      Akku. Akki. Baby. Kanna. Akshu.
+      <br><br>
+      I couldn't fit everything I feel into one ordinary message.
+      So I made you a little journey instead.
+    </p>
+
+    <button onclick="next(1)">Open our story ✨</button>
+  </div>
+</section>
+
+
+<!-- MESSAGE 1 -->
+<section class="screen" id="screen1">
+  <div class="small">Chapter 01 · From my heart</div>
+
+  <div class="card">
+    <p class="message">
+      You know Baby, when I think about us, I don't remember just
+      one moment.
+      <br><br>
+      I remember a collection of tiny things.
+      The conversations, the meetings, the fights, the laughing,
+      the going outside whenever we got time...
+      and especially the way you always tried to meet me whenever
+      you got some free time.
+      <br><br>
+      Maybe those things looked ordinary at that time.
+      But to me, they became <span class="highlight">memories.</span>
+    </p>
+  </div>
+
+  <button onclick="next(2)">There's a memory waiting →</button>
+</section>
+
+
+<!-- MEMORY QUESTION -->
+<section class="screen" id="screen2">
+  <div class="small">Chapter 02 · Do you remember?</div>
+
+  <div class="card">
+    <h2>One easy question...</h2>
+
+    <p>
+      If someone asked me,
+      <br>
+      <span class="highlight">"Where does your story with Akki hold so many memories?"</span>
+      <br><br>
+      what would I say?
+    </p>
+
+    <button class="option" onclick="answer(this,false)">
+      🌳 Somewhere we travelled
+    </button>
+
+    <button class="option" onclick="answer(this,true)">
+      🏫 Our school
+    </button>
+
+    <button class="option" onclick="answer(this,false)">
+      ☕ A random café
+    </button>
+
+    <div class="feedback" id="feedback2"></div>
+  </div>
+
+  <button id="continue2" style="display:none" onclick="next(3)">
+    You remembered ❤️
+  </button>
+</section>
+
+
+<!-- SCHOOL MEMORY -->
+<section class="screen" id="screen3">
+  <div class="small">Chapter 03 · Our school</div>
+
+  <div class="card">
+    <div style="font-size:45px;text-align:center">🏫</div>
+
+    <p class="message">
+      Our school isn't just a building in my memories.
+      <br><br>
+      It's where so many little pieces of <span class="highlight">us</span>
+      were created.
+      <br><br>
+      Our first memorable conversations...
+      the moments we shared...
+      the silly things...
+      the serious things...
+      and all those memories that somehow became special
+      simply because <span class="highlight">you were there.</span>
+    </p>
+  </div>
+
+  <button onclick="next(4)">But there's another place... 🏠</button>
+</section>
+
+
+<!-- HOME MEMORY -->
+<section class="screen" id="screen4">
+  <div class="small">Chapter 04 · Somewhere special</div>
+
+  <div class="card">
+    <div style="font-size:45px;text-align:center">🏠</div>
+
+    <h2>Our home memories</h2>
+
+    <p class="message">
+      One of my favourite things about us was simply being together
+      at home.
+      <br><br>
+      We didn't always need some huge plan.
+      Sometimes just being there together was enough.
+      <br><br>
+      We spent so many memories there...
+      and those simple moments became some of the ones I hold closest.
+    </p>
+  </div>
+
+  <button onclick="next(5)">Let's test your memory 🧠</button>
+</section>
+
+
+<!-- MEMORY MATCH GAME -->
+<section class="screen" id="screen5">
+  <div class="small">Chapter 05 · Memory match</div>
+
+  <div class="card">
+    <h2>Find the matching memories 💗</h2>
+
+    <p>
+      Flip two cards at a time.
+      Match all the pairs to unlock the next message.
+    </p>
+
+    <div class="memory-grid" id="memoryGrid"></div>
+
+    <div class="feedback" id="matchFeedback">
+      Matches: 0 / 4
+    </div>
+  </div>
+
+  <button id="continue5" style="display:none" onclick="next(6)">
+    Unlock the next memory 🔓
+  </button>
+</section>
+
+
+<!-- CARING MESSAGE -->
+<section class="screen" id="screen6">
+  <div class="small">Chapter 06 · The little things</div>
+
+  <div class="card">
+    <p class="message">
+      Akshu...
+      <br><br>
+      Do you know what I remember most?
+      <br><br>
+      Not only the big moments.
+      <br>
+      I remember the little care.
+      <br>
+      The pampering.
+      <br>
+      The way you could be so sensitive.
+      <br>
+      The way you would still make an effort to meet me
+      whenever you got free time.
+      <br><br>
+      Those things told me something without needing words:
+      <br><br>
+      <span class="highlight">"You matter to me."</span>
+    </p>
+  </div>
+
+  <button onclick="next(7)">One more question...</button>
+</section>
+
+
+<!-- FIGHTS -->
+<section class="screen" id="screen7">
+  <div class="small">Chapter 07 · Even the difficult days</div>
+
+  <div class="card">
+    <h2>We weren't perfect.</h2>
+
+    <p class="message">
+      We had huge fights too.
+      <br><br>
+      Sometimes anger came between us.
+      Sometimes emotions became too much.
+      Sometimes we probably hurt each other without meaning to.
+      <br><br>
+      But when I look back at our story,
+      I don't want to remember only the fights.
+      <br><br>
+      I want to remember that underneath all those arguments
+      there were two people who cared,
+      who felt deeply,
+      and who created something that became important.
+    </p>
+  </div>
+
+  <button onclick="next(8)">Choose honestly 💭</button>
+</section>
+
+
+<!-- CHOICE -->
+<section class="screen" id="screen8">
+  <div class="small">Chapter 08 · If you had to choose</div>
+
+  <div class="card">
+    <h2>What makes a memory special?</h2>
+
+    <p style="margin-bottom:20px">
+      Pick the answer that feels most like us.
+    </p>
+
+    <button class="option" onclick="choice(this)">
+      ❤️ The place
+    </button>
+
+    <button class="option" onclick="choice(this)">
+      🫶 The people
+    </button>
+
+    <button class="option" onclick="choice(this)">
+      ✨ The little moments
+    </button>
+
+    <div class="feedback" id="choiceFeedback"></div>
+  </div>
+
+  <button id="continue8" style="display:none" onclick="next(9)">
+    That's what I wanted you to realise ❤️
+  </button>
+</section>
+
+
+<!-- SECRET -->
+<section class="screen" id="screen9">
+  <div class="small">Chapter 09 · Secret message</div>
+
+  <div class="card">
+    <h2>🔐 A little secret...</h2>
+
+    <p>
+      There is something hidden here.
+      <br><br>
+      Don't just click the button.
+      <br>
+      <span class="highlight">Tap the heart 5 times.</span>
+    </p>
+
+    <div style="text-align:center;margin:25px">
+      <button
+        style="font-size:45px;background:none;box-shadow:none"
+        onclick="secretHeart()">
+        ❤️
+      </button>
+    </div>
+
+    <div class="secret" id="secret">
+      <p class="bigQuote">
+        "No matter how many chapters our story gets,
+        some memories will always feel like home."
+      </p>
+
+      <p style="text-align:center;margin-top:20px">
+        — from someone who remembers the little things 💗
+      </p>
+    </div>
+  </div>
+
+  <button id="continue9" style="display:none" onclick="next(10)">
+    Open the final chapter 🌙
+  </button>
+</section>
+
+
+<!-- PHOTO -->
+<section class="screen" id="screen10">
+  <div class="small">Chapter 10 · A memory to keep</div>
+
+  <div class="card">
+    <h2>One picture. A thousand feelings.</h2>
+
+    <img
+      src="assets/photo1.jpg"
+      class="photo"
+      onerror="this.style.display='none'"
+    >
+
+    <p class="photoNote">
+      Add your photo as: assets/photo1.jpg
+    </p>
+
+    <p class="message" style="margin-top:20px">
+      Some pictures are just pictures.
+      <br><br>
+      And some pictures make you remember an entire chapter of your life.
+    </p>
+  </div>
+
+  <button onclick="next(11)">Read this slowly... 💌</button>
+</section>
+
+
+<!-- FINAL LETTER -->
+<section class="screen" id="screen11">
+  <div class="small">Final chapter · For my Baby</div>
+
+  <div class="card">
+    <p class="message">
+      My Akki,
+      <br><br>
+
+      I don't know if a website can really explain everything
+      that a person feels, but I wanted to try.
+      <br><br>
+
+      When I think about you, I remember Akku, Akki, Baby,
+      Kanna and Akshu — all the names that somehow became
+      different little versions of you in my life.
+      <br><br>
+
+      I remember our school.
+      I remember our first memorable conversations.
+      I remember the time we spent at home.
+      I remember how you would meet me whenever you got
+      some free time.
+      <br><br>
+
+      I remember our outside moments too...
+      whenever we got a chance to go somewhere together.
+      <br><br>
+
+      And yes, I remember the fights.
+      The anger.
+      The emotional moments.
+      The times when everything felt difficult.
+      <br><br>
+
+      But I also remember your sensitive heart.
+      I remember the pampering.
+      I remember the care.
+      I remember the effort.
+      <br><br>
+
+      Maybe that's why the memories stayed.
+      Because they weren't just moments.
+      <br><br>
+
+      <span class="highlight">
+      They were moments with you.
+      </span>
+
+      <br><br>
+
+      So this little website isn't about saying that everything
+      was perfect.
+      It's about saying that what we experienced mattered to me.
+      <br><br>
+
+      Thank you for being a part of so many memories
+      that I will always remember differently because
+      <span class="highlight">you were there.</span>
+
+      <br><br>
+
+      Whatever happens in life,
+      I hope you always remember one thing:
+      <br><br>
+
+      <span class="highlight">
+      Somewhere in someone's memories,
+      you will always be a very special chapter.
+      </span>
+
+      <br><br>
+
+      — With all the feelings I couldn't fit into a normal message ❤️
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>🎵 One last thing...</h2>
+
+    <p>
+      Add a song that reminds you of him.
+    </p>
+
+    <audio controls style="width:100%;margin-top:20px">
+      <source src="assets/song.mp3" type="audio/mpeg">
+      Your browser doesn't support audio.
+    </audio>
+
+    <p class="photoNote">
+      Add your song as: assets/song.mp3
+    </p>
+  </div>
+
+
+  <div class="card">
+    <h2>🌙 And finally...</h2>
+
+    <img
+      src="assets/final.jpg"
+      class="photo"
+      onerror="this.style.display='none'"
+    >
+
+    <p class="bigQuote" style="margin-top:25px">
+      "Some people become memories.
+      Some memories become home."
+    </p>
+  </div>
+
+  <footer>
+    Made with a lot of memories ❤️
+    <br><br>
+    For Akki · Akku · Baby · Kanna · Akshu
+  </footer>
+
+</section>
+
+</div>
+
+
+<script>
+
+let current = 0;
+const totalScreens = 12;
+
+function next(number){
+
+  document.getElementById("screen"+current).classList.remove("active");
+
+  current = number;
+
+  document.getElementById("screen"+current).classList.add("active");
+
+  let percent = (current/(totalScreens-1))*100;
+  document.getElementById("progressBar").style.width = percent+"%";
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+  /* Try to start music after user interaction */
+  const audio = document.querySelector("audio");
+  if(audio){
+    audio.play().catch(()=>{});
+  }
+}
+
+
+/* MEMORY QUESTION */
+
+function answer(button, correct){
+
+  const buttons = document.querySelectorAll("#screen2 .option");
+  buttons.forEach(b => b.disabled = true);
+
+  const feedback = document.getElementById("feedback2");
+
+  if(correct){
+
+    button.classList.add("correct");
+
+    feedback.innerHTML =
+      "❤️ Yes. Our school holds so many pieces of our story.";
+
+    document.getElementById("continue2").style.display="inline-block";
+
+  }else{
+
+    button.classList.add("wrong");
+
+    feedback.innerHTML =
+      "Not this one 😌 Think about where so many of our memories began.";
+
+    buttons.forEach(b => b.disabled = false);
+  }
+}
+
+
+/* MEMORY MATCH GAME */
+
+const memorySymbols = [
+  "🏫","🏫",
+  "🏠","🏠",
+  "🫶","🫶",
+  "🌙","🌙"
+];
+
+let shuffled = [...memorySymbols].sort(()=>Math.random()-0.5);
+
+let firstCard = null;
+let secondCard = null;
+let lockBoard = false;
+let matches = 0;
+
+const grid = document.getElementById("memoryGrid");
+
+shuffled.forEach((symbol,index)=>{
+
+  const card = document.createElement("div");
+
+  card.className = "memory-card";
+
+  card.innerHTML = `
+    <div class="memory-inner">
+      <div class="memory-front">?</div>
+      <div class="memory-back">${symbol}</div>
+    </div>
+  `;
+
+  card.dataset.symbol = symbol;
+
+  card.onclick = function(){
+
+    if(lockBoard) return;
+    if(this === firstCard) return;
+    if(this.classList.contains("flipped")) return;
+
+    this.classList.add("flipped");
+
+    if(!firstCard){
+
+      firstCard = this;
+      return;
+    }
+
+    secondCard = this;
+    lockBoard = true;
+
+    if(firstCard.dataset.symbol === secondCard.dataset.symbol){
+
+      matches++;
+
+      firstCard = null;
+      secondCard = null;
+      lockBoard = false;
+
+      document.getElementById("matchFeedback").innerHTML =
+        "Matches: "+matches+" / 4";
+
+      if(matches === 4){
+
+        document.getElementById("matchFeedback").innerHTML =
+          "✨ You remembered them all. Just like I remember the little things.";
+
+        document.getElementById("continue5").style.display =
+          "inline-block";
+      }
+
+    }else{
+
+      setTimeout(()=>{
+
+        firstCard.classList.remove("flipped");
+        secondCard.classList.remove("flipped");
+
+        firstCard = null;
+        secondCard = null;
+        lockBoard = false;
+
+      },800);
+    }
+  };
+
+  grid.appendChild(card);
+});
+
+
+/* CHOICE */
+
+function choice(button){
+
+  const buttons = document.querySelectorAll("#screen8 .option");
+
+  buttons.forEach(b=>{
+    b.disabled=true;
+  });
+
+  button.classList.add("correct");
+
+  document.getElementById("choiceFeedback").innerHTML =
+    "💗 Exactly. The little moments matter because of the person we shared them with.";
+
+  document.getElementById("continue8").style.display =
+    "inline-block";
+}
+
+
+/* SECRET HEART */
+
+let heartClicks = 0;
+
+function secretHeart(){
+
+  heartClicks++;
+
+  if(heartClicks < 5){
+
+    document.getElementById("secret").style.display="none";
+
+  }else{
+
+    document.getElementById("secret").classList.add("show");
+
+    document.getElementById("continue9").style.display =
+      "inline-block";
+  }
+}
+
+
+/* Keyboard shortcut:
+   Press Enter to move forward where possible */
+document.addEventListener("keydown",function(e){
+
+  if(e.key === "Enter"){
+
+    if(current === 0) next(1);
+  }
+
+});
+
+</script>
+
+</body>
+</html>
+```
